@@ -5,7 +5,7 @@ message: 01001
 prepped: 000 111 000 0000 111
 
 
-*/
+
 
 
 
@@ -18,8 +18,8 @@ public:
     Correct_Algorithm1();
     virtual ~Correct_Algorithm1();
 
-    std::vector<bool> prep(const std::vector<bool> message) override;
-    std::vector<bool> correct(const std::vector<bool> message) override;
-    std::vector<bool> detect(const std::vector<bool> message) override {return {};}
-    float calculate_error_rate_detect(const std::vector<bool> corrupted_bits, const std::vector<bool> detected_errors) override {return 0.0f;}
-};
+    std::string prep(const std::string message) override;
+    std::string correct(const std::string message) override;
+    std::string detect(const std::string message) override {return {};}
+    float calculate_error_rate_detect(const std::string corrupted_bits, const std::string detected_errors) override {return 0.0f;}
+};*/

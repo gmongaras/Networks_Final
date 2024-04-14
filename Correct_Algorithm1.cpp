@@ -1,5 +1,5 @@
 #include "Correct_Algorithm1.h"
-
+/*
 Correct_Algorithm1::Correct_Algorithm1() {
 }
 
@@ -33,4 +33,4 @@ std::vector<bool> Correct_Algorithm1::correct(const std::vector<bool> message) {
     }
 
     return corrected_message;
-}
+}*/

@@ -18,9 +18,12 @@ class Detect_Algorithm1 : public Algorithm {
 public:
     Detect_Algorithm1();
     virtual ~Detect_Algorithm1();
+    bool parityBit;
+    bool checkedParityBit;
 
-    std::vector<bool> prep(const std::vector<bool> message) override;
-    std::vector<bool> correct(const std::vector<bool> message) override {return {};};
-    std::vector<bool> detect(const std::vector<bool> message) override;
-    float calculate_error_rate_detect(const std::vector<bool> corrupted_bits, const std::vector<bool> detected_errors) override;
+    std::string prep(const std::string message) override;
+    std::string correct(const std::string message) override {return {};};
+    std::string detect(const std::string message) override;
+    float calculate_error_rate_detect(const std::string detected_errors) override;
+    bool getParityBit(char);
 };
