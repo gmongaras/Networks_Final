@@ -8,6 +8,7 @@ Detect_Algorithm1::~Detect_Algorithm1() {
 
 std::string Detect_Algorithm1::prep(const std::string message) {
 
+    algorithm_name = "Single Parity Bit";
     parityBit = false;
     for (int i = 0; i < message.size(); i++) {
         char check_character = message[i];

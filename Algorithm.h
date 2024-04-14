@@ -7,6 +7,9 @@
 // pure virtual class so that it can be inherited by other classes
 class Algorithm {
 public:
+    // Every algorithm needs a name
+    std::string algorithm_name;
+
     // Prep takes a copy of a message and returns a new message with added
     // bits for error correction/detection.
     virtual std::string prep(const std::string message) = 0;

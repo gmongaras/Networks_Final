@@ -9,7 +9,7 @@
 #include "Algorithm.h"
 #include "Correct_Algorithm1.h"
 #include "Detect_Algorithm1.h"
-
+#include "Detect_Algorithm2.h"
 
 
 // Corrupt a message based on probability p
@@ -68,6 +68,7 @@ void test_detection_algorithm(Algorithm* algorithm, std::string original_message
     // Corrupt the message
     std::string corrupted_message = corrupt_message(prepared_message, corruption_probability);
 
+    std::cout << "Algorithm: " << algorithm->algorithm_name << std::endl;
     std::cout << "Original message: " << original_message << std::endl;
     std::cout << "Corrupted message: " << corrupted_message << std::endl;
     // Time how long it takes to detect errors in the message
@@ -90,7 +91,7 @@ void test_detection_algorithm(Algorithm* algorithm, std::string original_message
 
 int main(int argc, char* argv[]) {
     std::string original_message = "This is a test message for error correction.";
-    double corruption_probability = 0.01;
+    double corruption_probability = 0.005;
 
     srand(time(nullptr)); // Seed random number generator
 
@@ -102,6 +103,8 @@ int main(int argc, char* argv[]) {
     Algorithm* detecting_algorithms[] = {
         new Detect_Algorithm1(),
         new Detect_Algorithm1(),
+        new Detect_Algorithm2(),
+        new Detect_Algorithm2()
     };
 
     // Test each algorithm
