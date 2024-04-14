@@ -7,23 +7,32 @@
 #include <vector>
 
 #include "Algorithm.h"
-#include "Algorithm1.h"
+#include "Correct_Algorithm1.h"
+#include "Detect_Algorithm1.h"
 
 
 
 // Corrupt a message based on probability p
-std::vector<bool> corrupt_message(const std::vector<bool>& message, double p) {
+std::vector<std::vector<bool>> corrupt_message(const std::vector<bool>& message, double p) {
     // New corrupted message
     std::vector<bool> corrupted = message;
+
+    // Stores which bits were corrupted
+    std::vector<bool> corrupted_bits(message.size(), false);
 
     // Iterate over all bits in the message and corrupt them with probability p
     for (int i = 0; i < corrupted.size(); i++) {
         double rand_prob = static_cast<double>(rand()) / RAND_MAX;
         if (rand_prob < p) {
             corrupted[i] = !corrupted[i];
+
+            corrupted_bits[i] = true;
+        }
+        else {
+            corrupted_bits[i] = false;
         }
     }
-    return corrupted;
+    return {corrupted, corrupted_bits};
 }
 
 
@@ -72,8 +81,8 @@ std::string bitsToString(const std::vector<bool>& bits) {
 }
 
 
-// Function to test the speed of an Algorithm's run method
-void test_algorithm_speed(Algorithm* algorithm, std::string original_message, double corruption_probability) {
+
+void test_correction_algorithm(Algorithm* algorithm, std::string original_message, double corruption_probability) {
     // Turn the message into an array of bits
     std::vector<bool> bits = stringToBits(original_message);
 
@@ -82,11 +91,13 @@ void test_algorithm_speed(Algorithm* algorithm, std::string original_message, do
 
     // Corrupt the message
     // srand(time(nullptr)); // Seed random number generator
-    std::vector<bool> corrupted_message = corrupt_message(prepared_message, corruption_probability);
+    std::vector<std::vector<bool>> _ = corrupt_message(prepared_message, corruption_probability);
+    std::vector<bool> corrupted_message = _[0];
+    std::vector<bool> corrupted_bits = _[1];
 
     // Time how long it takes to correct the message
     auto start = std::chrono::high_resolution_clock::now();
-    std::vector<bool> corrected_message = algorithm->run(corrupted_message);
+    std::vector<bool> corrected_message = algorithm->correct(corrupted_message);
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> elapsed = end - start;
 
@@ -107,23 +118,59 @@ void test_algorithm_speed(Algorithm* algorithm, std::string original_message, do
     std::cout << "Error rate: " << error_rate << std::endl;
 }
 
+
+
+void test_detection_algorithm(Algorithm* algorithm, std::string original_message, double corruption_probability) {
+    // Turn the message into an array of bits
+    std::vector<bool> bits = stringToBits(original_message);
+
+    // Prepare the message for error correction
+    std::vector<bool> prepared_message = algorithm->prep(bits);
+
+    // Corrupt the message
+    std::vector<std::vector<bool>> _ = corrupt_message(prepared_message, corruption_probability);
+    std::vector<bool> corrupted_message = _[0];
+    std::vector<bool> corrupted_bits = _[1];
+
+    // Time how long it takes to detect errors in the message
+    auto start = std::chrono::high_resolution_clock::now();
+    std::vector<bool> detected_errors = algorithm->detect(corrupted_message);
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> elapsed = end - start;
+
+    // Get the error rate
+    int errors = algorithm->calculate_error_rate_detect(corrupted_bits, detected_errors);
+
+    std::cout << "Time taken: " << elapsed.count() << " milliseconds." << std::endl;
+    std::cout << "Error rate: " << errors << std::endl;
+}
+
 int main(int argc, char* argv[]) {
     std::string original_message = "This is a test message for error correction.";
     double corruption_probability = 0.01;
 
+    srand(time(nullptr)); // Seed random number generator
+
     // List of algorithms to test
-    Algorithm* algorithms[] = {
-        new Algorithm1(),
-        new Algorithm1(),
+    Algorithm* correcting_algorithms[] = {
+        new Correct_Algorithm1(),
+        new Correct_Algorithm1(),
+    };
+    Algorithm* detecting_algorithms[] = {
+        new Detect_Algorithm1(),
+        new Detect_Algorithm1(),
     };
 
     // Test each algorithm
-    for (Algorithm* algorithm : algorithms) {
-        test_algorithm_speed(algorithm, original_message, corruption_probability);
+    for (Algorithm* algorithm : correcting_algorithms) {
+        test_correction_algorithm(algorithm, original_message, corruption_probability);
+    }
+    for (Algorithm* algorithm : detecting_algorithms) {
+        test_detection_algorithm(algorithm, original_message, corruption_probability);
     }
 
     // Clear mem
-    for (Algorithm* algorithm : algorithms) {
+    for (Algorithm* algorithm : correcting_algorithms) {
         delete algorithm;
     }
 

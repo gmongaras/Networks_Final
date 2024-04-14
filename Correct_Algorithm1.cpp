@@ -1,15 +1,12 @@
-#include "Algorithm1.h"
+#include "Correct_Algorithm1.h"
 
-Algorithm1::Algorithm1() {
+Correct_Algorithm1::Correct_Algorithm1() {
 }
 
-Algorithm1::~Algorithm1() {
+Correct_Algorithm1::~Correct_Algorithm1() {
 }
 
-std::vector<bool> Algorithm1::prep(const std::vector<bool> message) {
-    // Do some preparation on the message
-    std::cout << "Preparation complete." << std::endl;
-
+std::vector<bool> Correct_Algorithm1::prep(const std::vector<bool> message) {
     std::vector<bool> prepped_message;
 
     // Triple bits stuffing
@@ -22,10 +19,7 @@ std::vector<bool> Algorithm1::prep(const std::vector<bool> message) {
     return prepped_message;
 }
 
-std::vector<bool> Algorithm1::run(const std::vector<bool> message) {
-    // Run the algorithm on the message
-    std::cout << "Algorithm 1 running..." << std::endl;
-
+std::vector<bool> Correct_Algorithm1::correct(const std::vector<bool> message) {
     std::vector<bool> corrected_message;
 
     for (int i = 0; i < message.size(); i+=3) {
