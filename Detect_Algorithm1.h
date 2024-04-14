@@ -23,7 +23,8 @@ public:
 
     std::string prep(const std::string message) override;
     std::string correct(const std::string message) override {return {};};
-    std::string detect(const std::string message) override;
-    float calculate_error_rate_detect(const std::string detected_errors) override;
+    std::vector<bool> detect(const std::string message) override;
+    std::vector<float> calculate_error_rate_detect(const std::string original_message, const std::string corrupted_message, const std::vector<bool> detected_errors);
     bool getParityBit(char);
+    std::string remove_correct_frames(const std::string message, const std::vector<bool> detected_errors);
 };

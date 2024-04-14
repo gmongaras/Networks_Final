@@ -65,32 +65,52 @@ void test_detection_algorithm(Algorithm* algorithm, std::string original_message
     // Prepare the message for error correction
     std::string prepared_message = algorithm->prep(original_message);
 
-    // Corrupt the message
-    std::string corrupted_message = corrupt_message(prepared_message, corruption_probability);
+    // Iterate until the algorithm has no errors
+    bool has_errors = true;
+    float total_time = 0.0f;
+    std::vector<float> errors;
+    while (has_errors) {
+        // Corrupt the message
+        std::string corrupted_message = corrupt_message(prepared_message, corruption_probability);
 
-    std::cout << "Algorithm: " << algorithm->algorithm_name << std::endl;
-    std::cout << "Original message: " << original_message << std::endl;
-    std::cout << "Corrupted message: " << corrupted_message << std::endl;
-    // Time how long it takes to detect errors in the message
-    auto start = std::chrono::high_resolution_clock::now();original_message;
-    std::string detected_errors = algorithm->detect(corrupted_message);
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double, std::milli> elapsed = end - start;
+        // Time how long it takes to detect errors in the message
+        auto start = std::chrono::high_resolution_clock::now();
+        std::vector<bool> detected_errors = algorithm->detect(corrupted_message);
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> elapsed = end - start;
 
-    // Get the error rate
-    if(algorithm->calculate_error_rate_detect(detected_errors)){
-        std::cout << "Error detected: True" << std::endl;
+        // Get the per-frame error
+        std::vector<float> new_errors = algorithm->calculate_error_rate_detect(original_message, corrupted_message, detected_errors);
+        for (float error : new_errors) {
+            errors.push_back(error);
+        }
+
+        // After making a detection, remove frames that are correct and
+        // keep the frames that have a detected error
+        prepared_message = algorithm->remove_correct_frames(corrupted_message, detected_errors);
+
+        // If the length of the prepared message is 0, then there are no more detected errors
+        if (prepared_message.size() == 0) {
+            has_errors = false;
+        }
+
+        // Add the time taken to the total time
+        total_time += elapsed.count();
     }
-    else{
-        std::cout << "Error detected: False" << std::endl;
-    }
 
-    std::cout << "Time taken: " << elapsed.count() << " milliseconds." << std::endl;
-    //std::cout << "Error rate: " << errors << std::endl;
+    // Take the mean of the errors
+    float mean_error = 0.0f;
+    for (float error : errors) {
+        mean_error += error;
+    }
+    mean_error /= errors.size();
+
+    std::cout << "Time taken: " << total_time << " milliseconds." << std::endl;
+    std::cout << "Error rate: " << mean_error << std::endl;
 }
 
 int main(int argc, char* argv[]) {
-    std::string original_message = "This is a test message for error correction.";
+    std::string original_message = "Nya UwU UwU N...nya? ^w^";
     double corruption_probability = 0.005;
 
     srand(time(nullptr)); // Seed random number generator
