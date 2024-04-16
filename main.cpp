@@ -8,6 +8,7 @@
 
 #include "Algorithm.h"
 #include "Correct_Algorithm1.h"
+#include "Correct_Algorithm2.h"
 #include "Detect_Algorithm1.h"
 #include "Detect_Algorithm2.h"
 
@@ -53,6 +54,9 @@ void test_correction_algorithm(Algorithm* algorithm, std::string original_messag
     }
     double error_rate = static_cast<double>(errors) / original_message.size();
 
+    std::cout << "Algorithm name: " << algorithm->algorithm_name << std::endl;
+    std::cout << "Prepared message: " << prepared_message << std::endl;
+    std::cout << "Corrupted message: " << corrupted_message << std::endl;
     std::cout << "Corrected message: " << corrected_message << std::endl;
     std::cout << "Time taken: " << elapsed.count() << " milliseconds." << std::endl;
     std::cout << "Error rate: " << error_rate << std::endl;
@@ -105,21 +109,24 @@ void test_detection_algorithm(Algorithm* algorithm, std::string original_message
     }
     mean_error /= errors.size();
 
+    std::cout << "Algorithm name: " << algorithm->algorithm_name << std::endl;
     std::cout << "Time taken: " << total_time << " milliseconds." << std::endl;
     std::cout << "Error rate: " << mean_error << std::endl;
 }
 
 int main(int argc, char* argv[]) {
     std::string original_message = "Nya UwU UwU N...nya? ^w^";
-    double corruption_probability = 0.005;
+    double corruption_probability = 0.01;
 
     srand(time(nullptr)); // Seed random number generator
 
     // List of algorithms to test
-    //Algorithm* correcting_algorithms[] = {
-        //new Correct_Algorithm1(),
-        //new Correct_Algorithm1(),
-    //};
+    Algorithm* correcting_algorithms[] = {
+        new Correct_Algorithm1(),
+        new Correct_Algorithm1(),
+        new Correct_Algorithm2(),
+        new Correct_Algorithm2(),
+    };
     Algorithm* detecting_algorithms[] = {
         new Detect_Algorithm1(),
         new Detect_Algorithm1(),
@@ -128,17 +135,17 @@ int main(int argc, char* argv[]) {
     };
 
     // Test each algorithm
-    //for (Algorithm* algorithm : correcting_algorithms) {
-        //test_correction_algorithm(algorithm, original_message, corruption_probability);
-    //}
+    for (Algorithm* algorithm : correcting_algorithms) {
+        test_correction_algorithm(algorithm, original_message, corruption_probability);
+    }
     for (Algorithm* algorithm : detecting_algorithms) {
         test_detection_algorithm(algorithm, original_message, corruption_probability);
     }
 
     // Clear mem
-    //for (Algorithm* algorithm : correcting_algorithms) {
-       //delete algorithm;
-    //}
+    for (Algorithm* algorithm : correcting_algorithms) {
+       delete algorithm;
+    }
 
     return 0;
 }

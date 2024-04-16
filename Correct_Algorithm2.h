@@ -1,8 +1,8 @@
 /*
 
-Simple triple bits stuffing
+Simple quintuple byte stuffing
 message: 01001
-prepped: 000 111 000 0000 111
+prepped: 00000 11111 00000 00000 11111
 
 
 */
@@ -13,10 +13,10 @@ prepped: 000 111 000 0000 111
 
 #include "Algorithm.h"
 
-class Correct_Algorithm1 : public Algorithm {
+class Correct_Algorithm2 : public Algorithm {
 public:
-    Correct_Algorithm1();
-    virtual ~Correct_Algorithm1();
+    Correct_Algorithm2();
+    virtual ~Correct_Algorithm2();
 
     std::string prep(const std::string message) override;
     std::string correct(const std::string message) override;
