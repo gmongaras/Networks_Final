@@ -9,6 +9,7 @@
 #include "Algorithm.h"
 #include "Correct_Algorithm1.h"
 #include "Correct_Algorithm2.h"
+#include "Correct_Algorithm3.h"
 #include "Detect_Algorithm1.h"
 #include "Detect_Algorithm2.h"
 
@@ -55,9 +56,9 @@ void test_correction_algorithm(Algorithm* algorithm, std::string original_messag
     double error_rate = static_cast<double>(errors) / original_message.size();
 
     std::cout << "Algorithm name: " << algorithm->algorithm_name << std::endl;
-    std::cout << "Prepared message: " << prepared_message << std::endl;
-    std::cout << "Corrupted message: " << corrupted_message << std::endl;
-    std::cout << "Corrected message: " << corrected_message << std::endl;
+    //std::cout << "Prepared message: " << prepared_message << std::endl;
+    //std::cout << "Corrupted message: " << corrupted_message << std::endl;
+    //std::cout << "Corrected message: " << corrected_message << std::endl;
     std::cout << "Time taken: " << elapsed.count() << " milliseconds." << std::endl;
     std::cout << "Error rate: " << error_rate << std::endl;
 }
@@ -122,15 +123,16 @@ int main(int argc, char* argv[]) {
 
     // List of algorithms to test
     Algorithm* correcting_algorithms[] = {
-        new Correct_Algorithm1(),
-        new Correct_Algorithm1(),
-        new Correct_Algorithm2(),
-        new Correct_Algorithm2(),
+        //new Correct_Algorithm1(),
+        //new Correct_Algorithm1(),
+        //new Correct_Algorithm2(),
+        //new Correct_Algorithm2(),
+        new Correct_Algorithm3()
     };
     Algorithm* detecting_algorithms[] = {
-        new Detect_Algorithm1(),
-        new Detect_Algorithm1(),
-        new Detect_Algorithm2(),
+        //new Detect_Algorithm1(),
+        //new Detect_Algorithm1(),
+        //new Detect_Algorithm2(),
         new Detect_Algorithm2()
     };
 
