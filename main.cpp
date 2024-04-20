@@ -61,6 +61,8 @@ void test_correction_algorithm(Algorithm* algorithm, std::string original_messag
     //std::cout << "Corrected message: " << corrected_message << std::endl;
     std::cout << "Time taken: " << elapsed.count() << " milliseconds." << std::endl;
     std::cout << "Error rate: " << error_rate << std::endl;
+    std::cout << "Initial string: " << original_message << std::endl;
+    std::cout << "Corrected string: " << corrected_message << std::endl;
 }
 
 
@@ -117,32 +119,32 @@ void test_detection_algorithm(Algorithm* algorithm, std::string original_message
 
 int main(int argc, char* argv[]) {
     std::string original_message = "Nya UwU UwU N...nya? ^w^";
-    double corruption_probability = 0.01;
+    double corruption_probability = 0.1;
 
     srand(time(nullptr)); // Seed random number generator
 
     // List of algorithms to test
     Algorithm* correcting_algorithms[] = {
-        //new Correct_Algorithm1(),
-        //new Correct_Algorithm1(),
-        //new Correct_Algorithm2(),
-        //new Correct_Algorithm2(),
+        new Correct_Algorithm1(),
+        new Correct_Algorithm1(),
+        new Correct_Algorithm2(),
+        new Correct_Algorithm2(),
         new Correct_Algorithm3()
     };
-    Algorithm* detecting_algorithms[] = {
-        //new Detect_Algorithm1(),
-        //new Detect_Algorithm1(),
-        //new Detect_Algorithm2(),
-        new Detect_Algorithm2()
-    };
+    // Algorithm* detecting_algorithms[] = {
+    //     //new Detect_Algorithm1(),
+    //     //new Detect_Algorithm1(),
+    //     //new Detect_Algorithm2(),
+    //     new Detect_Algorithm2()
+    // };
 
     // Test each algorithm
     for (Algorithm* algorithm : correcting_algorithms) {
         test_correction_algorithm(algorithm, original_message, corruption_probability);
     }
-    for (Algorithm* algorithm : detecting_algorithms) {
-        test_detection_algorithm(algorithm, original_message, corruption_probability);
-    }
+    // for (Algorithm* algorithm : detecting_algorithms) {
+    //     test_detection_algorithm(algorithm, original_message, corruption_probability);
+    // }
 
     // Clear mem
     for (Algorithm* algorithm : correcting_algorithms) {
