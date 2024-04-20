@@ -27,7 +27,7 @@ public:
     // Given a message and the detected errors, this function is used to
     // remove the frames that are correct and return the message with
     // only the frames that have a detected error.
-    virtual std::string remove_correct_frames(const std::string message, const std::vector<bool> detected_errors) = 0;
+    virtual std::string remove_correct_frames(const std::vector<bool> detected_errors, const std::string corrupted_message, const std::string prepared_message) = 0;
 };
 
 #endif // ALGORITHM_H

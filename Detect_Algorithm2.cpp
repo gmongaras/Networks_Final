@@ -26,6 +26,7 @@ std::vector<bool> Detect_Algorithm2::detect(const std::string message) {
     for (int i = 0; i < message.size(); i++) {
         newChecksum += message[i];
     }
+    //std::cout << originalChecksum << " " << newChecksum << std::endl;
     if (originalChecksum != newChecksum){
         return {true};
     }
@@ -52,9 +53,9 @@ std::vector<float> Detect_Algorithm2::calculate_error_rate_detect(const std::str
 }
 
 
-std::string Detect_Algorithm2::remove_correct_frames(const std::string message, const std::vector<bool> detected_errors) {
-    if (detected_errors[0] == false){
-        return message;
+std::string Detect_Algorithm2::remove_correct_frames(const std::vector<bool> detected_errors, const std::string corrupted_message, const std::string prepared_message) {
+    if (detected_errors[0] == true){
+        return prepared_message;
     }
     else{
         return "";

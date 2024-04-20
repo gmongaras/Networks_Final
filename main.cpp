@@ -12,6 +12,7 @@
 #include "Correct_Algorithm3.h"
 #include "Detect_Algorithm1.h"
 #include "Detect_Algorithm2.h"
+#include "Detect_Algorithm3.h"
 
 
 // Corrupt a message based on probability p
@@ -75,50 +76,41 @@ void test_detection_algorithm(Algorithm* algorithm, std::string original_message
     // Iterate until the algorithm has no errors
     bool has_errors = true;
     float total_time = 0.0f;
-    std::vector<float> errors;
+    int num_errors = 0;
     while (has_errors) {
         // Corrupt the message
         std::string corrupted_message = corrupt_message(prepared_message, corruption_probability);
-
+        //std::cout << prepared_message << " " << corrupted_message << std::endl;
         // Time how long it takes to detect errors in the message
         auto start = std::chrono::high_resolution_clock::now();
         std::vector<bool> detected_errors = algorithm->detect(corrupted_message);
-        auto end = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double, std::milli> elapsed = end - start;
 
-        // Get the per-frame error
-        std::vector<float> new_errors = algorithm->calculate_error_rate_detect(original_message, corrupted_message, detected_errors);
-        for (float error : new_errors) {
-            errors.push_back(error);
-        }
 
         // After making a detection, remove frames that are correct and
         // keep the frames that have a detected error
-        prepared_message = algorithm->remove_correct_frames(corrupted_message, detected_errors);
+        prepared_message = algorithm->remove_correct_frames(detected_errors, corrupted_message, prepared_message);
 
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> elapsed = end - start;
         // If the length of the prepared message is 0, then there are no more detected errors
         if (prepared_message.size() == 0) {
             has_errors = false;
+        }
+        else{
+            num_errors++;
         }
 
         // Add the time taken to the total time
         total_time += elapsed.count();
     }
 
-    // Take the mean of the errors
-    float mean_error = 0.0f;
-    for (float error : errors) {
-        mean_error += error;
-    }
-    mean_error /= errors.size();
-
     std::cout << "Algorithm name: " << algorithm->algorithm_name << std::endl;
     std::cout << "Time taken: " << total_time << " milliseconds." << std::endl;
-    std::cout << "Error rate: " << mean_error << std::endl;
+    std::cout << "Number of re-sends: " << num_errors << std::endl;
 }
 
 int main(int argc, char* argv[]) {
-    std::string original_message = "Nya UwU UwU N...nya? ^w^";
+    std::string original_message = "Nya UwU UwU N...nya? ^w^ bah";
     double corruption_probability = 0.1;
 
     srand(time(nullptr)); // Seed random number generator
@@ -131,20 +123,22 @@ int main(int argc, char* argv[]) {
         new Correct_Algorithm2(),
         new Correct_Algorithm3()
     };
-    // Algorithm* detecting_algorithms[] = {
-    //     //new Detect_Algorithm1(),
-    //     //new Detect_Algorithm1(),
-    //     //new Detect_Algorithm2(),
-    //     new Detect_Algorithm2()
-    // };
+     Algorithm* detecting_algorithms[] = {
+         new Detect_Algorithm1(),
+         new Detect_Algorithm1(),
+         new Detect_Algorithm2(),
+         new Detect_Algorithm2(),
+             new Detect_Algorithm3(),
+             new Detect_Algorithm3()
+     };
 
     // Test each algorithm
     for (Algorithm* algorithm : correcting_algorithms) {
         test_correction_algorithm(algorithm, original_message, corruption_probability);
     }
-    // for (Algorithm* algorithm : detecting_algorithms) {
-    //     test_detection_algorithm(algorithm, original_message, corruption_probability);
-    // }
+     for (Algorithm* algorithm : detecting_algorithms) {
+         test_detection_algorithm(algorithm, original_message, corruption_probability);
+     }
 
     // Clear mem
     for (Algorithm* algorithm : correcting_algorithms) {
