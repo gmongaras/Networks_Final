@@ -14,6 +14,7 @@
 #include "Detect_Algorithm2.h"
 #include "Detect_Algorithm3.h"
 #include "Detect_Algorithm4.h"
+#include "Detect_Algorithm5.h"
 
 
 // Corrupt a message based on probability p
@@ -132,7 +133,9 @@ int main(int argc, char* argv[]) {
          new Detect_Algorithm3(),
          new Detect_Algorithm3(),
          new Detect_Algorithm4(),
-         new Detect_Algorithm4()
+         new Detect_Algorithm4(),
+         new Detect_Algorithm5(),
+         new Detect_Algorithm5()
      };
 
     // Test each algorithm
